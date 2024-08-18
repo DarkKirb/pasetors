@@ -62,7 +62,7 @@ version = "1.5.5"
 optional = true
 
 [dependencies.p384]
-version = "0.13.0"
+version = "0.14.0-pre.1"
 optional = true
 
 [dependencies.rand_core]
@@ -72,7 +72,7 @@ features = ["getrandom"]
 optional = true
 
 [dependencies.sha2]
-version = "0.10.2"
+version = "0.11.0-pre.4"
 optional = true
 
 [dependencies.serde]

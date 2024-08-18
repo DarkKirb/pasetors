@@ -15,6 +15,7 @@
 //! [RFC 6979]: https://tools.ietf.org/html/rfc6979
 
 use core::marker::PhantomData;
+use core::convert::TryInto;
 
 use crate::common::{encode_b64, validate_footer_untrusted_token};
 use crate::errors::Error;
@@ -77,7 +78,7 @@ impl TryFrom<&AsymmetricSecretKey<V3>> for AsymmetricPublicKey<V3> {
     type Error = Error;
 
     fn try_from(value: &AsymmetricSecretKey<V3>) -> Result<Self, Self::Error> {
-        let sk = SigningKey::from_bytes(value.as_bytes().into()).map_err(|_| Error::Key)?;
+        let sk = SigningKey::from_bytes(value.as_bytes().try_into().unwrap()).map_err(|_| Error::Key)?;
         AsymmetricPublicKey::<V3>::from(sk.verifying_key().to_encoded_point(true).as_bytes())
     }
 }
@@ -168,7 +169,7 @@ impl PublicToken {
         }
 
         let signing_key =
-            SigningKey::from_bytes(secret_key.as_bytes().into()).map_err(|_| Error::Key)?;
+            SigningKey::from_bytes(secret_key.as_bytes().try_into().unwrap()).map_err(|_| Error::Key)?;
         let public_key = VerifyingKey::from(&signing_key).to_encoded_point(true);
 
         let f = footer.unwrap_or(&[]);
